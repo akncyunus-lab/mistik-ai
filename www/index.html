@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#100c20">
+<meta name="description" content="Mistik AI ile kahve falını ve rüyalarını eğlence amaçlı keşfet.">
 <title>Mistik AI — Kahve Falı ve Rüya Tabiri</title>
 <style>
 :root{color-scheme:dark;--bg:#100c20;--panel:#1b1530;--gold:#e9c77b;--muted:#b7adc9;--text:#fff8ee}
@@ -37,12 +39,13 @@ input[type=file],textarea{width:100%;border:1px solid #514263;background:#100c20
 textarea{min-height:125px;resize:vertical}
 button{font:inherit}
 .primary{border:0;background:linear-gradient(100deg,#e9c77b,#c49b55);color:#21152a;border-radius:13px;padding:14px 16px;width:100%;font-weight:800;margin-top:14px;cursor:pointer}
+.primary:disabled{opacity:.65;cursor:wait}
 .secondary{border:1px solid #514263;background:transparent;color:var(--text);border-radius:12px;padding:10px 14px;cursor:pointer}
 .preview{display:none;width:100%;max-height:270px;object-fit:contain;border-radius:12px;margin-top:12px;background:#100c20}
 .notice{font-size:12px;color:var(--muted);border-top:1px solid #382b49;margin-top:19px;padding-top:14px}
-.result{display:none;background:#241b35;border:1px solid #59445e;padding:14px;border-radius:12px;margin-top:15px;font-size:13px;line-height:1.6}
+.result{display:none;background:#241b35;border:1px solid #59445e;padding:14px;border-radius:12px;margin-top:15px;font-size:13px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.result.error{border-color:#d87575;color:#ffe0e0}
 footer{text-align:center;color:#827792;font-size:11px;margin-top:32px}
-.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -52,70 +55,254 @@ footer{text-align:center;color:#827792;font-size:11px;margin-top:32px}
 <div><div class="brand">MİSTİK <span>AI</span></div><div class="tag">Bir fincan, bin hikâye...</div></div>
 <div class="pill">✦ YENİ</div>
 </header>
+
 <section class="hero">
 <div class="eyebrow">✦ Gizemli dünyana hoş geldin</div>
 <h1>Bazen bir fincan,<br><span>çok şey anlatır.</span></h1>
 <p>Kahve fincanındaki şekilleri keşfet veya gördüğün rüyaların sembolik anlamlarına göz at.</p>
 </section>
+
 <h2 class="section-title">Bugün neyi keşfediyoruz?</h2>
 <div class="cards">
-<button class="card" id="coffeeCard">
+<button class="card" id="coffeeCard" type="button">
 <div class="emoji">☕</div><h3>Kahve Falı</h3><p>Fincanının fotoğrafını seç, keşfe başla.</p><div class="arrow">Falımı keşfet ↗</div>
 </button>
-<button class="card" id="dreamCard">
+<button class="card" id="dreamCard" type="button">
 <div class="emoji">🌙</div><h3>Rüya Tabiri</h3><p>Rüyanı yaz, sembolik anlamlarını keşfet.</p><div class="arrow">Rüyamı yorumla ↗</div>
 </button>
 </div>
+
 <section class="panel" id="coffeePanel">
-<button class="secondary" id="backCoffee">← Ana sayfa</button>
+<button class="secondary" id="backCoffee" type="button">← Ana sayfa</button>
 <h2 style="margin-top:18px">☕ Kahve falın</h2>
 <p>Fincan fotoğrafını telefonundan seç. İyi ışıkta çekilmiş, net bir fotoğraf tercih et.</p>
 <label for="photo">Fincan fotoğrafı</label>
-<input id="photo" type="file" accept="image/*" capture="environment">
+<input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
 <img class="preview" id="preview" alt="Seçtiğin fincan fotoğrafı">
-<button class="primary" id="coffeeSubmit">Falımı hazırla</button>
-<div class="result" id="coffeeResult">Fotoğrafın seçildi! Kahve falı için yapay zekâ bağlantısını bir sonraki aşamada ekleyeceğiz. Henüz gerçek bir analiz yapılmadı.</div>
+<button class="primary" id="coffeeSubmit" type="button">Falımı hazırla</button>
+<div class="result" id="coffeeResult" role="status" aria-live="polite"></div>
 </section>
+
 <section class="panel" id="dreamPanel">
-<button class="secondary" id="backDream">← Ana sayfa</button>
+<button class="secondary" id="backDream" type="button">← Ana sayfa</button>
 <h2 style="margin-top:18px">🌙 Rüyanı anlat</h2>
-<p>Aklında kalan ayrıntıları yaz. Rüyanı birlikte keşfetmeye hazırlanalım.</p>
+<p>Aklında kalan ayrıntıları yaz. Rüyanı birlikte keşfedelim.</p>
 <label for="dreamText">Rüyanda ne gördün?</label>
 <textarea id="dreamText" maxlength="3000" placeholder="Örneğin: Rüyamda büyük bir denizin kenarında yürüyordum..."></textarea>
 <p id="counter" style="text-align:right;margin:5px 0">0 / 3000</p>
-<button class="primary" id="dreamSubmit">Rüyamı yorumla</button>
-<div class="result" id="dreamResult">Rüyan kaydedilmedi ve henüz yapay zekâya gönderilmedi. Gerçek yorumlama bağlantısını sonraki aşamada kuracağız.</div>
+<button class="primary" id="dreamSubmit" type="button">Rüyamı yorumla</button>
+<div class="result" id="dreamResult" role="status" aria-live="polite"></div>
 </section>
+
 <div class="notice">✦ Yorumlar eğlence ve kişisel düşünme amaçlıdır. Geleceğe ilişkin kesinlik veya garanti sunulmaz.</div>
 <footer>© Mistik AI · Gizemli keşifler dünyası</footer>
 </main>
+
 <script>
-const $=id=>document.getElementById(id);
-function showPanel(name){
-$('coffeePanel').classList.toggle('active',name==='coffee');
-$('dreamPanel').classList.toggle('active',name==='dream');
-if(name)$(name==='coffee'?'coffeePanel':'dreamPanel').scrollIntoView({behavior:'smooth',block:'start'});
+"use strict";
+
+const $ = id => document.getElementById(id);
+const API_URL = "https://mistik-ai-api.akncyunus.workers.dev";
+
+function showPanel(name) {
+  $("coffeePanel").classList.toggle("active", name === "coffee");
+  $("dreamPanel").classList.toggle("active", name === "dream");
+
+  if (name) {
+    $(name === "coffee" ? "coffeePanel" : "dreamPanel")
+      .scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
-$('coffeeCard').addEventListener('click',()=>showPanel('coffee'));
-$('dreamCard').addEventListener('click',()=>showPanel('dream'));
-$('backCoffee').addEventListener('click',()=>showPanel(''));
-$('backDream').addEventListener('click',()=>showPanel(''));
-$('photo').addEventListener('change',()=>{
-const file=$('photo').files[0];
-if(!file){$('preview').style.display='none';return}
-if(!file.type.startsWith('image/')){alert('Lütfen bir fotoğraf seç.');return}
-const reader=new FileReader();
-reader.onload=()=>{$('preview').src=reader.result;$('preview').style.display='block';$('coffeeResult').style.display='none'};
-reader.readAsDataURL(file);
+
+function showResult(id, message, isError = false) {
+  const box = $(id);
+  box.textContent = message;
+  box.classList.toggle("error", isError);
+  box.style.display = "block";
+}
+
+$("coffeeCard").addEventListener("click", () => showPanel("coffee"));
+$("dreamCard").addEventListener("click", () => showPanel("dream"));
+$("backCoffee").addEventListener("click", () => showPanel(""));
+$("backDream").addEventListener("click", () => showPanel(""));
+
+$("photo").addEventListener("change", () => {
+  const file = $("photo").files[0];
+  $("preview").style.display = "none";
+  $("coffeeResult").style.display = "none";
+
+  if (!file) return;
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    showResult("coffeeResult", "Lütfen JPG, PNG veya WebP fotoğrafı seç.", true);
+    $("photo").value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    $("preview").src = reader.result;
+    $("preview").style.display = "block";
+  };
+  reader.onerror = () => {
+    showResult("coffeeResult", "Fotoğraf okunamadı. Yeniden seçmeyi dene.", true);
+  };
+  reader.readAsDataURL(file);
 });
-$('coffeeSubmit').addEventListener('click',()=>{
-if(!$('photo').files.length){alert('Önce fincanının fotoğrafını seç kanka.');return}
-$('coffeeResult').style.display='block';
+
+function compressPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+
+      const maxSide = 1100;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Fotoğraf hazırlanamadı."));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      let quality = 0.8;
+      let dataUrl = canvas.toDataURL("image/jpeg", quality);
+
+      while (dataUrl.length > 3500000 && quality > 0.4) {
+        quality -= 0.1;
+        dataUrl = canvas.toDataURL("image/jpeg", quality);
+      }
+
+      if (dataUrl.length > 3900000) {
+        reject(new Error("Fotoğraf çok büyük. Daha küçük bir fotoğraf seç."));
+        return;
+      }
+
+      resolve(dataUrl);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Fotoğraf açılamadı."));
+    };
+
+    img.src = objectUrl;
+  });
+}
+
+async function askAI(payload) {
+  let response;
+
+  try {
+    response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+  } catch {
+    throw new Error("Sunucuya bağlanılamadı. İnternet bağlantını kontrol et.");
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("Sunucudan geçerli bir yanıt alınamadı.");
+  }
+
+  if (!response.ok || typeof data.result !== "string" || !data.result.trim()) {
+    const details = data.details || data.error || "Bilinmeyen sunucu hatası.";
+    throw new Error(String(details));
+  }
+
+  return data.result.trim();
+}
+
+$("coffeeSubmit").addEventListener("click", async () => {
+  const file = $("photo").files[0];
+  const button = $("coffeeSubmit");
+
+  if (!file) {
+    alert("Önce fincanının fotoğrafını seç kanka.");
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    alert("Lütfen JPG, PNG veya WebP fotoğrafı seç.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Fincanın yorumlanıyor...";
+  showResult("coffeeResult", "☕ Fotoğraf hazırlanıyor...");
+
+  try {
+    const imageBase64 = await compressPhoto(file);
+    showResult("coffeeResult", "✨ Yapay zekâ fincanını yorumluyor. Lütfen bekle...");
+
+    const result = await askAI({
+      type: "coffee",
+      imageBase64,
+      mimeType: "image/jpeg"
+    });
+
+    showResult("coffeeResult", "☕ Kahve falın\n\n" + result);
+  } catch (error) {
+    showResult(
+      "coffeeResult",
+      "Fal yorumlanamadı:\n" + error.message +
+      "\n\nBiraz sonra tekrar deneyebilirsin.",
+      true
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Falımı hazırla";
+  }
 });
-$('dreamText').addEventListener('input',()=>{$('counter').textContent=$('dreamText').value.length+' / 3000';$('dreamResult').style.display='none'});
-$('dreamSubmit').addEventListener('click',()=>{
-if(!$('dreamText').value.trim()){alert('Önce rüyanı birkaç cümleyle anlat.');return}
-$('dreamResult').style.display='block';
+
+$("dreamText").addEventListener("input", () => {
+  $("counter").textContent = $("dreamText").value.length + " / 3000";
+  $("dreamResult").style.display = "none";
+});
+
+$("dreamSubmit").addEventListener("click", async () => {
+  const dreamText = $("dreamText").value.trim();
+  const button = $("dreamSubmit");
+
+  if (!dreamText) {
+    alert("Önce rüyanı birkaç cümleyle anlat.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Rüyan yorumlanıyor...";
+  showResult("dreamResult", "🌙 Rüyan yapay zekâya gönderiliyor...");
+
+  try {
+    const result = await askAI({
+      type: "dream",
+      dreamText
+    });
+
+    showResult("dreamResult", "🌙 Rüyanın yorumu\n\n" + result);
+  } catch (error) {
+    showResult(
+      "dreamResult",
+      "Rüyan yorumlanamadı:\n" + error.message +
+      "\n\nBiraz sonra tekrar deneyebilirsin.",
+      true
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Rüyamı yorumla";
+  }
 });
 </script>
 </body>
