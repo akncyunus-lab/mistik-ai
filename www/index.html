@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100c20">
+<title>Mistik AI — Kahve Falı ve Rüya Tabiri</title>
+<style>
+:root{color-scheme:dark;--bg:#100c20;--panel:#1b1530;--gold:#e9c77b;--muted:#b7adc9;--text:#fff8ee}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#30204b 0,#100c20 58%);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
+main{width:min(100%,520px);margin:auto;padding:25px 19px 45px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.logo{width:49px;height:49px;border:1px solid #a88b53;border-radius:17px;display:grid;place-items:center;font-size:27px;background:#2a2040}
+.brand{font-size:21px;font-weight:800;letter-spacing:.3px}.brand span{color:var(--gold)}
+.tag{font-size:12px;color:var(--muted);margin-top:3px}
+.pill{margin-left:auto;font-size:11px;color:var(--gold);border:1px solid #63503b;border-radius:20px;padding:7px 10px}
+.hero{padding:24px 0 27px}
+.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:700}
+h1{font-size:34px;line-height:1.16;letter-spacing:-1px;margin:12px 0}
+h1 span{color:var(--gold)}
+p{color:var(--muted);line-height:1.65;font-size:14px}
+.hero p{max-width:340px}
+.section-title{font-size:18px;margin:8px 0 15px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{border:1px solid #40304f;background:linear-gradient(145deg,#29203e,#191329);border-radius:21px;padding:18px 15px;min-height:183px;color:var(--text);text-align:left;width:100%;cursor:pointer}
+.card:active,.primary:active{transform:scale(.98)}
+.emoji{font-size:34px;margin-bottom:15px}
+.card h3{font-size:16px;margin:0 0 7px}
+.card p{font-size:12px;margin:0 0 15px;line-height:1.5}
+.arrow{color:var(--gold);font-size:13px;font-weight:700}
+.panel{display:none;margin-top:20px;padding:19px;border:1px solid #493754;border-radius:20px;background:#191329}
+.panel.active{display:block}
+.panel h2{font-size:21px;margin:0 0 8px}
+label{display:block;font-size:13px;margin:17px 0 8px;color:#e9dfef}
+input[type=file],textarea{width:100%;border:1px solid #514263;background:#100c20;color:var(--text);border-radius:12px;padding:13px;font:inherit;font-size:14px}
+textarea{min-height:125px;resize:vertical}
+button{font:inherit}
+.primary{border:0;background:linear-gradient(100deg,#e9c77b,#c49b55);color:#21152a;border-radius:13px;padding:14px 16px;width:100%;font-weight:800;margin-top:14px;cursor:pointer}
+.secondary{border:1px solid #514263;background:transparent;color:var(--text);border-radius:12px;padding:10px 14px;cursor:pointer}
+.preview{display:none;width:100%;max-height:270px;object-fit:contain;border-radius:12px;margin-top:12px;background:#100c20}
+.notice{font-size:12px;color:var(--muted);border-top:1px solid #382b49;margin-top:19px;padding-top:14px}
+.result{display:none;background:#241b35;border:1px solid #59445e;padding:14px;border-radius:12px;margin-top:15px;font-size:13px;line-height:1.6}
+footer{text-align:center;color:#827792;font-size:11px;margin-top:32px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="logo">☾</div>
+<div><div class="brand">MİSTİK <span>AI</span></div><div class="tag">Bir fincan, bin hikâye...</div></div>
+<div class="pill">✦ YENİ</div>
+</header>
+<section class="hero">
+<div class="eyebrow">✦ Gizemli dünyana hoş geldin</div>
+<h1>Bazen bir fincan,<br><span>çok şey anlatır.</span></h1>
+<p>Kahve fincanındaki şekilleri keşfet veya gördüğün rüyaların sembolik anlamlarına göz at.</p>
+</section>
+<h2 class="section-title">Bugün neyi keşfediyoruz?</h2>
+<div class="cards">
+<button class="card" id="coffeeCard">
+<div class="emoji">☕</div><h3>Kahve Falı</h3><p>Fincanının fotoğrafını seç, keşfe başla.</p><div class="arrow">Falımı keşfet ↗</div>
+</button>
+<button class="card" id="dreamCard">
+<div class="emoji">🌙</div><h3>Rüya Tabiri</h3><p>Rüyanı yaz, sembolik anlamlarını keşfet.</p><div class="arrow">Rüyamı yorumla ↗</div>
+</button>
+</div>
+<section class="panel" id="coffeePanel">
+<button class="secondary" id="backCoffee">← Ana sayfa</button>
+<h2 style="margin-top:18px">☕ Kahve falın</h2>
+<p>Fincan fotoğrafını telefonundan seç. İyi ışıkta çekilmiş, net bir fotoğraf tercih et.</p>
+<label for="photo">Fincan fotoğrafı</label>
+<input id="photo" type="file" accept="image/*" capture="environment">
+<img class="preview" id="preview" alt="Seçtiğin fincan fotoğrafı">
+<button class="primary" id="coffeeSubmit">Falımı hazırla</button>
+<div class="result" id="coffeeResult">Fotoğrafın seçildi! Kahve falı için yapay zekâ bağlantısını bir sonraki aşamada ekleyeceğiz. Henüz gerçek bir analiz yapılmadı.</div>
+</section>
+<section class="panel" id="dreamPanel">
+<button class="secondary" id="backDream">← Ana sayfa</button>
+<h2 style="margin-top:18px">🌙 Rüyanı anlat</h2>
+<p>Aklında kalan ayrıntıları yaz. Rüyanı birlikte keşfetmeye hazırlanalım.</p>
+<label for="dreamText">Rüyanda ne gördün?</label>
+<textarea id="dreamText" maxlength="3000" placeholder="Örneğin: Rüyamda büyük bir denizin kenarında yürüyordum..."></textarea>
+<p id="counter" style="text-align:right;margin:5px 0">0 / 3000</p>
+<button class="primary" id="dreamSubmit">Rüyamı yorumla</button>
+<div class="result" id="dreamResult">Rüyan kaydedilmedi ve henüz yapay zekâya gönderilmedi. Gerçek yorumlama bağlantısını sonraki aşamada kuracağız.</div>
+</section>
+<div class="notice">✦ Yorumlar eğlence ve kişisel düşünme amaçlıdır. Geleceğe ilişkin kesinlik veya garanti sunulmaz.</div>
+<footer>© Mistik AI · Gizemli keşifler dünyası</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function showPanel(name){
+$('coffeePanel').classList.toggle('active',name==='coffee');
+$('dreamPanel').classList.toggle('active',name==='dream');
+if(name)$(name==='coffee'?'coffeePanel':'dreamPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('coffeeCard').addEventListener('click',()=>showPanel('coffee'));
+$('dreamCard').addEventListener('click',()=>showPanel('dream'));
+$('backCoffee').addEventListener('click',()=>showPanel(''));
+$('backDream').addEventListener('click',()=>showPanel(''));
+$('photo').addEventListener('change',()=>{
+const file=$('photo').files[0];
+if(!file){$('preview').style.display='none';return}
+if(!file.type.startsWith('image/')){alert('Lütfen bir fotoğraf seç.');return}
+const reader=new FileReader();
+reader.onload=()=>{$('preview').src=reader.result;$('preview').style.display='block';$('coffeeResult').style.display='none'};
+reader.readAsDataURL(file);
+});
+$('coffeeSubmit').addEventListener('click',()=>{
+if(!$('photo').files.length){alert('Önce fincanının fotoğrafını seç kanka.');return}
+$('coffeeResult').style.display='block';
+});
+$('dreamText').addEventListener('input',()=>{$('counter').textContent=$('dreamText').value.length+' / 3000';$('dreamResult').style.display='none'});
+$('dreamSubmit').addEventListener('click',()=>{
+if(!$('dreamText').value.trim()){alert('Önce rüyanı birkaç cümleyle anlat.');return}
+$('dreamResult').style.display='block';
+});
+</script>
+</body>
+</html>
