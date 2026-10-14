@@ -1,0 +1,48 @@
+name: Mistik AI Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodlari indir
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Java kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: NPM paketlerini kur
+        run: npm install
+
+      - name: Android projesini olustur
+        run: npx cap add android
+
+      - name: Web dosyalarini Android projesine aktar
+        run: npx cap sync android
+
+      - name: APK derle
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+
+      - name: APK dosyasini yayinla
+        uses: actions/upload-artifact@v4
+        with:
+          name: mistik-ai-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
